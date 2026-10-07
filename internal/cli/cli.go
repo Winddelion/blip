@@ -7,13 +7,13 @@ import (
 )
 
 type Options struct {
-	daemon   bool
-	verbose  bool
-	config   bool
-	confPath string
-	urls     []string
+	Daemon   bool
+	Verbose  bool
+	Config   bool
+	ConfPath string
+	Urls     []string
 	// flags for struct.
-	// d - daemon, v - versbose, V - version
+	// d - Daemon, v - versbose, V - version
 }
 
 func version() {
@@ -38,17 +38,17 @@ func ParseArgs(argv []string) (*Options, error) {
 	}
 
 	if len(positionals) == 0 {
-		return nil, fmt.Errorf("no urls given")
+		return nil, fmt.Errorf("no Urls given")
 	}
 
-	if opts.config {
+	if opts.Config {
 		if len(positionals) == 0 {
-			return nil, fmt.Errorf("-c requires a config file path")
+			return nil, fmt.Errorf("-c requires a Config file path")
 		}
-		opts.confPath = positionals[0]
+		opts.ConfPath = positionals[0]
 		positionals = positionals[1:]
 	}
-	opts.urls = positionals
+	opts.Urls = positionals
 	return opts, nil
 }
 
@@ -65,11 +65,11 @@ func parseFlags(token string, opts *Options) error {
 	for flagIdx := 0; flagIdx < len(body); flagIdx++ {
 		switch body[flagIdx] {
 		case 'd':
-			opts.daemon = true
+			opts.Daemon = true
 		case 'c':
-			opts.config = true
+			opts.Config = true
 		case 'v':
-			opts.verbose = true
+			opts.Verbose = true
 		case 'V':
 			version()
 			os.Exit(0)
