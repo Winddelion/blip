@@ -43,7 +43,7 @@ func ParseArgs(argv []string) (*Options, error) {
 
 	if opts.config {
 		if len(positionals) == 0 {
-			fmt.Errorf("-c requires a config file path")
+			return nil, fmt.Errorf("-c requires a config file path")
 		}
 		opts.confPath = positionals[0]
 		positionals = positionals[1:]
