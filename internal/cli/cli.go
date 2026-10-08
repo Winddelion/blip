@@ -10,6 +10,7 @@ type Options struct {
 	Daemon   bool
 	Verbose  bool
 	Config   bool
+	Unsafe   bool
 	ConfPath string
 	Urls     []string
 	// flags for struct.
@@ -24,7 +25,7 @@ func ParseArgs(argv []string) (*Options, error) {
 	var positionals []string
 
 	i := 0
-	for i < len(argv) {
+	for i < len(argv) { // will probably need to replace it with for loop for conf
 		token := argv[i]
 
 		if len(token) > 1 && token[0] == '-' {
@@ -32,7 +33,7 @@ func ParseArgs(argv []string) (*Options, error) {
 				return nil, err
 			}
 		} else {
-			positionals = append(positionals, token)
+			positionals = append(positionals, parseProtocols(token, opts))
 		}
 		i++
 	}
@@ -42,13 +43,14 @@ func ParseArgs(argv []string) (*Options, error) {
 	}
 
 	if opts.Config {
-		if len(positionals) == 0 {
+		if len(positionals) == 0 { // FIX: Dead code. check can never be true
 			return nil, fmt.Errorf("-c requires a Config file path")
 		}
 		opts.ConfPath = positionals[0]
 		positionals = positionals[1:]
 	}
 	opts.Urls = positionals
+
 	return opts, nil
 }
 
@@ -73,9 +75,21 @@ func parseFlags(token string, opts *Options) error {
 		case 'V':
 			version()
 			os.Exit(0)
+		case 'u':
+			opts.Unsafe = true
 		default:
 			return fmt.Errorf("unknown flag: -%c", body[flagIdx])
 		}
 	}
 	return nil
+}
+
+func parseProtocols(pos string, opts *Options) string {
+	if strings.HasPrefix(pos, "https://") || strings.HasPrefix(pos, "http://") {
+		return pos
+	}
+	if opts.Unsafe {
+		return "http://" + pos
+	}
+	return "https://" + pos
 }
