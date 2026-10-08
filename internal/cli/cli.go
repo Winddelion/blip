@@ -48,7 +48,7 @@ func ParseArgs(argv []string) (*Options, error) {
 	}
 
 	if len(positionals) == 0 {
-		return nil, fmt.Errorf("no Urls given")
+		return nil, fmt.Errorf("no URLs given")
 	}
 
 	opts.Urls = positionals
