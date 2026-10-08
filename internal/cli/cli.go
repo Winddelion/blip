@@ -29,6 +29,15 @@ func ParseArgs(argv []string) (*Options, error) {
 		token := argv[i]
 
 		if len(token) > 1 && token[0] == '-' {
+
+			if strings.Contains(token[1:], "c") {
+				if i+1 >= len(argv) {
+					return nil, fmt.Errorf("-c requires config file path")
+				}
+				opts.Config = true
+				opts.ConfPath = argv[i+1]
+				i++
+			}
 			if err := parseFlags(token, opts); err != nil {
 				return nil, err
 			}
@@ -42,13 +51,6 @@ func ParseArgs(argv []string) (*Options, error) {
 		return nil, fmt.Errorf("no Urls given")
 	}
 
-	if opts.Config {
-		if len(positionals) == 0 { // FIX: Dead code. check can never be true
-			return nil, fmt.Errorf("-c requires a Config file path")
-		}
-		opts.ConfPath = positionals[0]
-		positionals = positionals[1:]
-	}
 	opts.Urls = positionals
 
 	return opts, nil
