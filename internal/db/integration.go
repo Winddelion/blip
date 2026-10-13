@@ -54,7 +54,7 @@ func Connect(ctx context.Context) (*pgxpool.Pool, error) {
 		return nil, fmt.Errorf("getting env: %v\n", err)
 	}
 
-	connString := fmt.Sprintf("postgress://%s:%s@localhost:5432/%s?sslmode=disable", connVars.dbUser, connVars.dbPSWD, connVars.dbName) // TODO: handle URL-encode credentials
+	connString := fmt.Sprintf("postgres://%s:%s@localhost:5432/%s?sslmode=disable", connVars.dbUser, connVars.dbPSWD, connVars.dbName) // TODO: handle URL-encode credentials
 
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
