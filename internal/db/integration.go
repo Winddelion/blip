@@ -20,7 +20,7 @@ type envVar struct {
 func getEnv() (envVar, error) {
 	err := godotenv.Load("../../docker/.env")
 	if err != nil {
-		return envVar{}, fmt.Errorf("loading .env file: %w\n", err)
+		return envVar{}, fmt.Errorf("loading .env file: %w", err)
 	}
 
 	result := envVar{
@@ -41,7 +41,7 @@ func getEnv() (envVar, error) {
 	}
 
 	if len(missing) > 0 {
-		return envVar{}, fmt.Errorf("missing required env vars: %s\n", strings.Join(missing, ", "))
+		return envVar{}, fmt.Errorf("missing required env vars: %s", strings.Join(missing, ", "))
 	}
 
 	return result, nil
@@ -51,7 +51,7 @@ func Connect(ctx context.Context) (*pgxpool.Pool, error) {
 
 	connVars, err := getEnv()
 	if err != nil {
-		return nil, fmt.Errorf("getting env: %w\n", err)
+		return nil, fmt.Errorf("getting env: %w", err)
 	}
 
 	connString := fmt.Sprintf("postgres://%s:%s@localhost:5432/%s?sslmode=disable", connVars.dbUser, connVars.dbPSWD, connVars.dbName) // TODO: handle URL-encode credentials
@@ -61,12 +61,12 @@ func Connect(ctx context.Context) (*pgxpool.Pool, error) {
 
 	pool, err := pgxpool.New(ctx, connString)
 	if err != nil {
-		return nil, fmt.Errorf("unable to create connection pgxpool: %w\n", err)
+		return nil, fmt.Errorf("unable to create connection pgxpool: %w", err)
 	}
 
 	if err := pool.Ping(ctx); err != nil {
 		pool.Close()
-		return nil, fmt.Errorf("unable to ping db: %w\n", err)
+		return nil, fmt.Errorf("unable to ping db: %w", err)
 	}
 
 	return pool, nil
