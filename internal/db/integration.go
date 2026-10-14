@@ -3,6 +3,7 @@ package integration
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -15,6 +16,8 @@ type envVar struct {
 	dbPSWD string
 	dbUser string
 	dbName string
+	dbHost string
+	dbPort string
 }
 
 func getEnv() (envVar, error) {
@@ -24,9 +27,11 @@ func getEnv() (envVar, error) {
 	}
 
 	result := envVar{
-		dbPSWD: os.Getenv("DB_PASSWORD"),
-		dbUser: os.Getenv("DB_USER"),
-		dbName: os.Getenv("DB_NAME"),
+		dbPSWD: url.QueryEscape(os.Getenv("DB_PASSWORD")),
+		dbUser: url.QueryEscape(os.Getenv("DB_USER")),
+		dbName: url.QueryEscape(os.Getenv("DB_NAME")),
+		dbHost: os.Getenv("DB_HOST"),
+		dbPort: os.Getenv("DB_PORT"),
 	}
 
 	var missing []string
@@ -54,7 +59,7 @@ func Connect(ctx context.Context) (*pgxpool.Pool, error) {
 		return nil, fmt.Errorf("getting env: %w", err)
 	}
 
-	connString := fmt.Sprintf("postgres://%s:%s@localhost:5432/%s?sslmode=disable", connVars.dbUser, connVars.dbPSWD, connVars.dbName) // TODO: handle URL-encode credentials
+	connString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", connVars.dbUser, connVars.dbPSWD, connVars.dbHost, connVars.dbPort, connVars.dbName)
 
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
