@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"time"
 
@@ -12,12 +13,12 @@ import (
 type Check struct {
 	ID            int64
 	URL           string
-	Status_code   *int
-	Response_time *int
+	Status_code   sql.NullInt32
+	Response_time sql.NullInt32
 	CheckedAt     time.Time
 }
 
-func InsertCheck(ctx context.Context, pool *pgxpool.Pool, url string, status, response_time *int) (int64, error) {
+func InsertCheck(ctx context.Context, pool *pgxpool.Pool, url string, status, response_time int32) (int64, error) {
 	var id int64
 	err := pool.QueryRow(ctx,
 		`INSERT INTO checks (url, status_code, response_time)
