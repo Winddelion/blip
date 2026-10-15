@@ -6,5 +6,5 @@ CREATE TABLE IF NOT EXISTS checks (
     checked_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE INDEX IF NOT EXISTS idx_checkls_url_time
+CREATE INDEX IF NOT EXISTS idx_checks_url_time
     ON checks (url, checked_at DESC);
