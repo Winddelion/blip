@@ -21,7 +21,7 @@ type envVar struct {
 }
 
 func getEnv() (envVar, error) {
-	err := godotenv.Load("../../docker/.env")
+	err := godotenv.Load("docker/.env")
 	if err != nil {
 		return envVar{}, fmt.Errorf("loading .env file: %w", err)
 	}
