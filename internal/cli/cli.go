@@ -9,6 +9,7 @@ import (
 type Options struct {
 	Daemon   bool
 	Verbose  bool
+	Search   bool
 	Config   bool
 	Unsafe   bool
 	ConfPath string
@@ -79,6 +80,8 @@ func parseFlags(token string, opts *Options) error {
 			os.Exit(0)
 		case 'u':
 			opts.Unsafe = true
+		case 's':
+			opts.Search = true
 		default:
 			return fmt.Errorf("unknown flag: -%c", body[flagIdx])
 		}
